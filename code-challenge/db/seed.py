@@ -1,5 +1,5 @@
 # seeding.py
-from app import db, Hero, Power, HeroPower
+from app.models import db, Hero, Power, HeroPower
 
 print("🦸‍♀️ Seeding powers...")
 powers = [
