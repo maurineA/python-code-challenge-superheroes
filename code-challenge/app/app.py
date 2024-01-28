@@ -3,6 +3,7 @@
 from flask import Flask, make_response, jsonify
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
+from app.models import Power
 
 from models import db, Hero
 
@@ -42,6 +43,25 @@ def get_powers():
     powers = Power.query.all()
     powers_list = [{'id': power.id, 'name': power.name, 'description': power.description} for power in powers]
     return jsonify(powers_list)
+
+@app.route('/hero_powers', methods=['POST'])
+def create_hero_power():
+    data = request.get_json()
+    if 'strength' not in data or 'power_id' not in data or 'hero_id' not in data:
+        return jsonify({'errors': ['Missing parameters']}), 400
+
+    hero = Hero.query.get(data['hero_id'])
+    power = Power.query.get(data['power_id'])
+
+    if not hero or not power:
+        return jsonify({'errors': ['Hero or Power not found']}), 404
+
+    hero_power = HeroPower(hero=hero, power=power, strength=data['strength'])
+    db.session.add(hero_power)
+    db.session.commit()
+
+    powers_list = [{'id': hp.power.id, 'name': hp.power.name, 'description': hp.power.description} for hp in hero.heropowers]
+    return jsonify({'id': hero.id, 'name': hero.name, 'super_name': hero.super_name, 'powers': powers_list}), 201
 
 
 
