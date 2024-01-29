@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
-from flask import Flask, make_response, jsonify
+from flask import Flask, make_response, jsonify, request
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
-from app.models import Power
+from app.models import Power, HeroPower
 
 from models import db, Hero
 
@@ -44,6 +44,8 @@ def get_powers():
     powers_list = [{'id': power.id, 'name': power.name, 'description': power.description} for power in powers]
     return jsonify(powers_list)
 
+
+
 @app.route('/hero_powers', methods=['POST'])
 def create_hero_power():
     data = request.get_json()
@@ -66,4 +68,4 @@ def create_hero_power():
 
 
 if __name__ == '__main__':
-    app.run(port=5555)
+    app.run(port=5555, debug = True)

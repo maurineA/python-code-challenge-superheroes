@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import validates
 
 
 db = SQLAlchemy()
@@ -12,6 +13,12 @@ class Hero(db.Model):
     heropowers = db.relationship('HeroPower', backref='heros')
 
 
+@validates('name', 'super_name')
+def validate_name(self, key, value):
+        if not value:
+            raise ValueError(f"{key.capitalize()} cannot be empty.")
+        return value
+ 
 
 class Power(db.Model):
     __tablename__ = 'powers'
