@@ -45,3 +45,9 @@ class HeroPower(db.Model):
     hero_id = db.Column(db.Integer, db.ForeignKey('heros.id'))
     power_id = db.Column(db.Integer, db.ForeignKey('powers.id'))
     strength = db.Column(db.String)
+
+@validates('strength')
+def validate_strength(self, key, value):
+        if value not in ['Strong', 'Weak', 'Average']:
+            raise ValueError("Strength must be one of: 'Strong', 'Weak', 'Average'.")
+        return value    
