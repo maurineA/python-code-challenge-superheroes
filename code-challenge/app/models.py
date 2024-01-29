@@ -20,12 +20,21 @@ def validate_name(self, key, value):
         return value
  
 
+
+
 class Power(db.Model):
     __tablename__ = 'powers'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     description = db.Column(db.Text)
     heropowers = db.relationship('HeroPower', backref='powers')
+
+
+@validates('description')
+def validate_description(self, key, value):
+        if len(value) < 20:
+            raise ValueError("Description must be at least 20 characters long.")
+        return value
 
     
 
