@@ -38,11 +38,27 @@ def get_hero(id):
         return jsonify({'error': 'Hero not found'}), 404
     
 
-@app.route('/powers', methods=['GET'])
-def get_powers():
-    powers = Power.query.all()
-    powers_list = [{'id': power.id, 'name': power.name, 'description': power.description} for power in powers]
-    return jsonify(powers_list)
+@app.route('/powers/<int:id>', methods=['GET'])
+def get_power(id):
+    power = Power.query.get(id)
+    if not power:
+        return jsonify({'error': 'Power not found'}), 404
+    return jsonify({'id': power.id, 'name': power.name, 'description': power.description})
+
+
+@app.route('/powers/<int:id>', methods=['PATCH'])
+def update_power(id):
+    power = Power.query.get(id)
+    if not power:
+        return jsonify({'error': 'Power not found'}), 404
+
+    data = request.get_json()
+    if 'description' in data:
+        power.description = data['description']
+        db.session.commit()
+        return jsonify({'id': power.id, 'name': power.name, 'description': power.description})
+    else:
+        return jsonify({'errors': ['Missing description parameter']}), 400
 
 
 

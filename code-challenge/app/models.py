@@ -2,6 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import validates
 
 
+
 db = SQLAlchemy()
 
 class Hero(db.Model):
@@ -19,8 +20,6 @@ def validate_name(self, key, value):
             raise ValueError(f"{key.capitalize()} cannot be empty.")
         return value
  
-
-
 
 class Power(db.Model):
     __tablename__ = 'powers'
